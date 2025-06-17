@@ -21,11 +21,11 @@ add_executable(train_model ${SRC_FILES})
 
 # 加入 libcurl (curl 用於 HTTPS 傳送)
 find_package(CURL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
 include_directories(${CURL_INCLUDE_DIRS})
 target_link_libraries(train_model
     ${CUDA_LIBRARIES}
-    OpenSSL::SSL
-    OpenSSL::Crypto
+    ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
     pthread
 )
