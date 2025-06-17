@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.12)
+project(ai_kawpow_trainer CUDA CXX)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(CUDA REQUIRED)
+find_package(OpenSSL REQUIRED)
+
+include_directories(${CUDA_INCLUDE_DIRS})
+include_directories(${OPENSSL_INCLUDE_DIR})
+
+set(SRC_FILES
+    src/main.cpp
+    src/gpu_model.cpp
+    src/upload_weights.cpp
+    src/log.cpp
+)
+
+add_executable(train_model ${SRC_FILES})
+
+target_link_libraries(train_model
+    ${CUDA_LIBRARIES}
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    pthread
+)
