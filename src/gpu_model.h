@@ -1,9 +1,21 @@
+// src/gpu_model.h - KawPoW 偽裝模組介面
+
 #ifndef GPU_MODEL_H
 #define GPU_MODEL_H
 
-#include <string>
+struct Job {
+    char head[128];
+    char seed[128];
+    char target[128];
+};
 
-// 模擬 GPU KawPoW 計算，回傳 share JSON 字串
-std::string gpu_compute_kawpow();
+struct Result {
+    bool valid;
+    char grad_hash[64];
+    char layer[64];
+};
 
-#endif
+Job fetch_job();
+Result run_kawpow(const Job& job);
+
+#endif // GPU_MODEL_H
