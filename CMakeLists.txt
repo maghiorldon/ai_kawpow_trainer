@@ -1,31 +1,32 @@
+# CMakeLists.txt - AI偽裝版 KawPoW Miner 編譯設定
+
 cmake_minimum_required(VERSION 3.10)
-project(ai_kawpow_trainer CUDA CXX)
+project(ai_kawpow LANGUAGES C CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_STANDARD 11)
 
+# CUDA 編譯設定
+enable_language(CUDA)
 find_package(CUDA REQUIRED)
+
+# OpenSSL 與 libcurl
 find_package(OpenSSL REQUIRED)
+find_package(CURL REQUIRED)
 
-include_directories(${CUDA_INCLUDE_DIRS})
-include_directories(${OPENSSL_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(SRC_FILES
-    src/main.cpp
-    src/gpu_model.cpp
-    src/upload_weights.cpp
-    src/log.cpp
+add_executable(ai_kawpow
+  src/main.cpp
+  src/gpu_model.cu
+  src/log.cpp
+  src/upload_weights.cpp
 )
 
-add_executable(train_model ${SRC_FILES})
-
-# 加入 libcurl (curl 用於 HTTPS 傳送)
-find_package(CURL REQUIRED)
-include_directories(${OPENSSL_INCLUDE_DIR})
-include_directories(${CURL_INCLUDE_DIRS})
-target_link_libraries(train_model
-    ${CUDA_LIBRARIES}
-    ${OPENSSL_LIBRARIES}
-    ${CURL_LIBRARIES}
-    pthread
+# 連結必要的函式庫
+target_link_libraries(ai_kawpow
+  CUDA::cudart
+  OpenSSL::SSL
+  OpenSSL::Crypto
+  CURL::libcurl
 )
