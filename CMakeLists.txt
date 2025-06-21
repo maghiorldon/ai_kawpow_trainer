@@ -12,7 +12,8 @@ enable_language(CUDA)
 
 # 尋找 CUDA Toolkit
 find_package(CUDAToolkit REQUIRED)
-
+find_package(OpenSSL REQUIRED)
+find_package(CURL REQUIRED)
 # 加入所有源碼
 add_executable(ai_kawpow
   src/main.cpp
@@ -22,4 +23,11 @@ add_executable(ai_kawpow
 )
 
 # CUDA 靜態連結
-target_link_libraries(ai_kawpow PRIVATE CUDA::cudart)
+target_link_libraries(ai_kawpow 
+	PRIVATE 
+	  CUDA::cudart
+	  OpenSSL::SSL
+          OpenSSL::Crypto
+          CURL::libcurl
+  )
+

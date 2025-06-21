@@ -9,7 +9,7 @@ job = {
     "target": "0x00000fffffffffff"
 }
 
-with open("../../current_job.json", "w") as f:
+with open("/home/ubuntu/ai_kawpow_trainer/current_job.json", "w") as f:
     json.dump(job, f, indent=2)
 
 print("[JobCtl] ✅ Job 下發成功 -> current_job.json")
