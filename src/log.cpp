@@ -1,26 +1,25 @@
+// src/log.cpp - 模擬 Transformer-style 模型訓練輸出
+
+#include <iostream>
+#include <iomanip>
+#include "gpu_model.h"
 #include "log.h"
-#include <cstdarg>
-#include <ctime>
 
-void log_with_prefix(const char* prefix, const char* fmt, va_list args) {
-    time_t now = time(nullptr);
-    char buf[20];
-    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&now));
-    printf("%s %s ", buf, prefix);
-    vprintf(fmt, args);
-    printf("\n");
+void log_device_info() {
+    std::cout << "[Env] Using device: NVIDIA A100, batch_size=64" << std::endl;
 }
 
-void log_info(const char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    log_with_prefix("[INFO]", fmt, args);
-    va_end(args);
+void log_training_step(int step) {
+    float loss = 0.35f - (step % 10) * 0.0123f;
+    float acc = 88.1f + (step % 7) * 0.5f;
+    std::cout << "[Train] Step " << step
+              << " | loss=" << std::fixed << std::setprecision(4) << loss
+              << " | val_acc=" << std::fixed << std::setprecision(2) << acc << "%"
+              << std::endl;
 }
 
-void log_error(const char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    log_with_prefix("[ERROR]", fmt, args);
-    va_end(args);
+void log_shard_sync(const Result& r, int step) {
+    std::cout << "[Sync] layer: " << r.layer
+              << ", hash: " << r.grad_hash
+              << ", step: " << step << std::endl;
 }
